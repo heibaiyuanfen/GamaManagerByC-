@@ -1,66 +1,102 @@
 ﻿<Window x:Class="DiscordClone.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Discord Clone" Height="720" Width="1280">
+        Title="DiscordClone" Height="720" Width="1280"
+        Background="#2C2F33">
 
-    <!-- Styles and Resources -->
     <Window.Resources>
+        <!-- 服务器按钮样式 -->
         <Style x:Key="ServerButtonStyle" TargetType="Button">
             <Setter Property="Width" Value="50"/>
             <Setter Property="Height" Value="50"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Background" Value="#36393F"/>
-            <!-- Add more styling here -->
-        </Style>
-
-        <Style x:Key="ChannelItemStyle" TargetType="Label">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Background" Value="Transparent"/>
-            <!-- Add more styling here -->
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Width="50" Height="50">
+                            <!-- 圆形形状 -->
+                            <Ellipse x:Name="circle" Fill="{TemplateBinding Background}" Visibility="Visible"/>
+                            <!-- 正方形形状 -->
+                            <Rectangle x:Name="square" Fill="{TemplateBinding Background}" Visibility="Collapsed"/>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!-- 鼠标悬停时切换形状 -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="circle" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="square" Property="Visibility" Value="Visible"/>
+
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
-    <!-- Layout -->
     <Grid>
-        <!-- ...existing grid definitions... -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <!-- Servers Panel -->
-        <StackPanel Grid.Column="0" Background="#2C2F33">
-            <!-- Server Buttons -->
-            <Button Content="S1" Style="{StaticResource ServerButtonStyle}"/>
-            <Button Content="S2" Style="{StaticResource ServerButtonStyle}"/>
-            <!-- Add more buttons here -->
+        <!-- 左侧导航栏 -->
+        <StackPanel DockPanel.Dock="Left" Width="80" Background="#2C2F33 " Height="720">
+            <!-- 服务器按钮 -->
+            <Button Style="{StaticResource ServerButtonStyle}">
+                <Button.Content>
+                    <Image Source="/source/icon.png"/>
+                </Button.Content>
+
+            </Button>
+            <Button Style="{StaticResource ServerButtonStyle}">
+                <Button.Content>
+                    <Image Source="/source/back.png"/>
+                </Button.Content>
+
+            </Button>
+            <Button Style="{StaticResource ServerButtonStyle}">
+                <Button.Content>
+                    <Image Source="/source/add.png"/>
+                </Button.Content>
+
+            </Button>
+            <!-- 其他服务器按钮 -->
+            <!-- ... -->
         </StackPanel>
 
-        <!-- Channels Panel -->
-        <ListBox Grid.Column="1" Background="#23272A">
-            <!-- Channel List Items -->
-            <Label Content="# general" Style="{StaticResource ChannelItemStyle}"/>
-            <Label Content="# help" Style="{StaticResource ChannelItemStyle}"/>
-            <!-- Add more items here -->
-        </ListBox>
+        <!-- 主内容区域 -->
+        <Grid Grid.Column="1">
+            <!-- 顶部菜单 -->
+            <Menu VerticalAlignment="Top">
+                <MenuItem Header="File" />
+                <MenuItem Header="Edit" />
+                <MenuItem Header="View" />
+                <!-- ... -->
+            </Menu>
 
-        <!-- Main Content Area -->
-        <Border Grid.Column="2" Background="#36393F" Padding="10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-                    <!-- Chat messages -->
-                    <StackPanel>
-                        <!-- Simulate a few chat messages -->
-                        <TextBlock Text="User1: Hello!" Foreground="White" Margin="5"/>
-                        <TextBlock Text="User2: Hi there!" Foreground="White" Margin="5"/>
-                        <!-- Add more messages here -->
-                    </StackPanel>
-                </ScrollViewer>
-                <TextBox Grid.Row="1" Margin="5" Height="30"/>
-            </Grid>
-        </Border>
+            <!-- 聊天区域和其他内容 -->
+            <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch" Margin="0,25,0,30" IsEnabled="False">
+                <StackPanel>
+                    <!-- 聊天消息和其他内容 -->
+                    <TextBlock Text="Welcome to Discord Clone!" Foreground="White" Margin="10" />
+                    <!-- ... -->
+                </StackPanel>
+            </ScrollViewer>
 
-        <!-- ...existing menu and status bar... -->
+            <!-- 底部状态栏 -->
+            <StatusBar Grid.Row="2" VerticalAlignment="Bottom">
+                <StatusBarItem Content="Ready" />
+            </StatusBar>
+        </Grid>
     </Grid>
 </Window>
