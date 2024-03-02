@@ -27,4 +27,9 @@
     <Resource Include="source\back.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Fonts\" />
+    <Folder Include="Styles\" />
+  </ItemGroup>
+
 </Project>

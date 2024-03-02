@@ -2,101 +2,24 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="DiscordClone" Height="720" Width="1280"
-        Background="#2C2F33">
-
-    <Window.Resources>
-        <!-- 服务器按钮样式 -->
-        <Style x:Key="ServerButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid Width="50" Height="50">
-                            <!-- 圆形形状 -->
-                            <Ellipse x:Name="circle" Fill="{TemplateBinding Background}" Visibility="Visible"/>
-                            <!-- 正方形形状 -->
-                            <Rectangle x:Name="square" Fill="{TemplateBinding Background}" Visibility="Collapsed"/>
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <!-- 鼠标悬停时切换形状 -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="circle" Property="Visibility" Value="Collapsed"/>
-                                <Setter TargetName="square" Property="Visibility" Value="Visible"/>
-
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Background="Transparent"
+        >
     <Grid>
+        <!--windowborder-->
+        
+        <Border Background="#212529"
+                CornerRadius="20">
+            
+        </Border>
+        
+        <!--basegrid-->
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="228"/>
+            <ColumnDefinition Width="622"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <!-- 左侧导航栏 -->
-        <StackPanel DockPanel.Dock="Left" Width="80" Background="#2C2F33 " Height="720">
-            <!-- 服务器按钮 -->
-            <Button Style="{StaticResource ServerButtonStyle}">
-                <Button.Content>
-                    <Image Source="/source/icon.png"/>
-                </Button.Content>
-
-            </Button>
-            <Button Style="{StaticResource ServerButtonStyle}">
-                <Button.Content>
-                    <Image Source="/source/back.png"/>
-                </Button.Content>
-
-            </Button>
-            <Button Style="{StaticResource ServerButtonStyle}">
-                <Button.Content>
-                    <Image Source="/source/add.png"/>
-                </Button.Content>
-
-            </Button>
-            <!-- 其他服务器按钮 -->
-            <!-- ... -->
-        </StackPanel>
-
-        <!-- 主内容区域 -->
-        <Grid Grid.Column="1">
-            <!-- 顶部菜单 -->
-            <Menu VerticalAlignment="Top">
-                <MenuItem Header="File" />
-                <MenuItem Header="Edit" />
-                <MenuItem Header="View" />
-                <!-- ... -->
-            </Menu>
-
-            <!-- 聊天区域和其他内容 -->
-            <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch" Margin="0,25,0,30" IsEnabled="False">
-                <StackPanel>
-                    <!-- 聊天消息和其他内容 -->
-                    <TextBlock Text="Welcome to Discord Clone!" Foreground="White" Margin="10" />
-                    <!-- ... -->
-                </StackPanel>
-            </ScrollViewer>
-
-            <!-- 底部状态栏 -->
-            <StatusBar Grid.Row="2" VerticalAlignment="Bottom">
-                <StatusBarItem Content="Ready" />
-            </StatusBar>
-        </Grid>
     </Grid>
 </Window>
