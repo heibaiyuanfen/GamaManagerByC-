@@ -1,0 +1,84 @@
+﻿<!-- 资源字典的开始 -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- 定义一个样式，键为"Btnstyle"，适用于RadioButton -->
+    <Style x:Key="Btnstyle"
+           TargetType="RadioButton">
+        <!-- 设置RadioButton水平和垂直居中对齐，并有一定的外边距 -->
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,5,0,0"/>
+
+        <!-- 自定义RadioButton的模板 -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <!-- 控制模板定义开始 -->
+                <ControlTemplate TargetType="RadioButton">
+                    <!-- 边框，作为背景和指示器的容器 -->
+                    <Border x:Name="border"
+                            Height="50"
+                            Width="228"
+                            BorderThickness="0">
+                        <!-- 边框的背景色 -->
+                        <Border.Background>
+                            <SolidColorBrush x:Name="BorderBackGround" Color="#272b2f"/>
+                        </Border.Background>
+
+                        <!-- 包含指示器和内容的网格 -->
+                        <Grid>
+                            <!-- 指示器，默认不可见，当鼠标悬浮时显示 -->
+                            <Border x:Name="Indicator"
+                                    Height="35"
+                                    Width="4"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Background="#ffffff"
+                                    Visibility="Collapsed"
+                                    CornerRadius="2"/>
+                            <!-- 内容展示区 -->
+                            <ContentPresenter />
+                        </Grid>
+                    </Border>
+                    <!-- 控制模板触发器开始 -->
+                    <ControlTemplate.Triggers>
+                        <!-- 鼠标悬浮时显示指示器 -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Visibility" TargetName="Indicator" Value="Visible"/>
+                        </Trigger>
+                        <!-- 鼠标进入时开始颜色动画，将背景由深色变为浅色 -->
+                        <EventTrigger RoutedEvent="Border.MouseEnter" SourceName="border">
+                            <BeginStoryboard>
+                                <Storyboard >
+                                    <ColorAnimation Storyboard.TargetName="BorderBackGround"
+                                                    Storyboard.TargetProperty="Color"
+                                                    From="#272b2f"
+                                                    To="#3e434a"
+                                                    Duration="0:0:0:3"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <!-- 鼠标离开时颜色动画，背景色由浅色变回深色 -->
+                        <EventTrigger RoutedEvent="Border.MouseLeave" SourceName="border">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="BorderBackGround"
+                                                    Storyboard.TargetProperty="Color"
+                                                    From="#3e434a"
+                                                    To="#272b2f"
+                                                    Duration="0:0:0:3"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <!-- RadioButton选中时更改背景色并显示指示器 -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="#212529"/>
+                            <Setter Property="Visibility" TargetName="Indicator" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
+<!-- 资源字典结束 -->

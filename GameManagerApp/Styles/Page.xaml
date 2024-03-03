@@ -1,0 +1,45 @@
+﻿<!-- 定义一个资源字典 -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 定义一个样式，键值为"Page_Style"，目标类型为UserControl -->
+    <Style x:Key="Page_Style" TargetType="{x:Type UserControl}">
+
+        <!-- 设置UserControl的初始渲染变换，即一开始在Y轴向下50个单位的位置 -->
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform X="0" Y="50"/>
+            </Setter.Value>
+        </Setter>
+
+        <!-- 样式触发器部分 -->
+        <Style.Triggers>
+            <!-- 当UserControl不可见时，设置其透明度为0 -->
+            <Trigger Property="Visibility" Value="Collapsed">
+                <Setter Property="Opacity" Value="0"/>
+            </Trigger>
+
+            <!-- UserControl加载时触发动画 -->
+            <EventTrigger RoutedEvent="Loaded">
+                <!-- 开始一个动画序列 -->
+                <BeginStoryboard>
+                    <Storyboard>
+                        <!-- 渐变透明度，从0变到1，持续时间为1秒 -->
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                         Duration="0:0:1"
+                                         From="0"
+                                         To="1"/>
+
+                        <!-- 在Y轴上移动，从50变到0（原位置），持续时间为0.8秒，减速比率为0.6 -->
+                        <!-- 这意味着动画开始时速度较快，结束时减速 -->
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                         From="50"
+                                         To="0"
+                                         Duration="0:0:0.8"
+                                         DecelerationRatio="0.6"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
+<!-- 资源字典结束 -->
