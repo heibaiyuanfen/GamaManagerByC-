@@ -4,9 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GameManagerApp.View"
+             xmlns:vm ="clr-namespace:GameManagerApp.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="622"
+             Style="{StaticResource Page_Style}">
+    <UserControl.DataContext>
+        <vm:OrdersVM/>
+    </UserControl.DataContext>
+    
     <Grid>
+        <Border CornerRadius="0,20,20,0">
+            <Border.Background>
+                <ImageBrush ImageSource="/Images/order_page.png"
+                            Stretch="None"/>
+            </Border.Background>
+        </Border>
+        <TextBlock Text="DATE"
+                   Foreground="#dbdbdb"
+                   FontSize="12"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Top"
+                   FontFamily="/Fonts/#Rubik-Medium"
+                   Margin="0,160,160,160">
             
+        </TextBlock>
+
+        <TextBlock Text="{Binding DisplayOrderDate}"
+                   Foreground="#ced565"
+                   FontSize="12"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Top"
+                   FontFamily="/Fonts/#Rubik-Medium"
+                   Margin="0,160,90,0">
+           
+        </TextBlock>
+        
+        
     </Grid>
 </UserControl>

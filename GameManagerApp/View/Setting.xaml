@@ -3,10 +3,48 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GameManagerApp.View"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:vm="clr-namespace:GameManagerApp.ViewModels"  
+    mc:Ignorable="d"
+    d:DesignHeight="600" d:DesignWidth="622"
+    Style="{StaticResource Page_Style}">
+    <UserControl.DataContext>
+        <vm:SettingVM/>
+    </UserControl.DataContext>
+
+    <!-- 用户控件的内容 -->
     <Grid>
-            
+        <!-- 边框，具有特定的圆角 -->
+        <Border CornerRadius="0,20,20,0">
+            <!-- 边框背景设置为图片 -->
+            <Border.Background>
+                <ImageBrush ImageSource="/Images/setting_page.png"
+                            Stretch="None"/>
+            </Border.Background>
+        </Border>
+        <!-- 文本块，用于显示设置的状态（开/关） -->
+        <TextBlock Foreground="#ced565"  
+                   FontSize="12" 
+                   TextAlignment="Center" 
+                   HorizontalAlignment="Right" 
+                   VerticalAlignment="Top" 
+                   FontFamily="/Fonts/#Rubik-Medium" 
+                   Margin="0,290,238,0">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <!-- 默认文本值 -->
+                    <Setter Property="Text"
+                            Value="Off"/>
+                    <!-- 样式触发器 -->
+                    <Style.Triggers>
+                        <!-- 数据触发器，当Settings属性为True时更改文本 -->
+                        <DataTrigger Binding="{Binding Settings}"
+                                     Value="True">
+                            <Setter Property="Text"
+                                    Value="On"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
     </Grid>
 </UserControl>
