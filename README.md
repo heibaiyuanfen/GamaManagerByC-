@@ -22,3 +22,67 @@
 - **动态视图更新**：通过修改`CurrentView`属性来动态更换界面中展示的视图模型。这种方式使得在不同视图模型之间进行切换变得简单，同时保持了视图和视图模型的清晰分离。
 
 综上所述，这部分代码实现了一个基于命令的导航系统，允许应用程序在不同视图之间进行无缝切换，而不需要在视图层中编写复杂的逻辑。通过使用`RelayCommand`来封装导航逻辑，`NavigationVM`能够以声明式的方式处理用户界面的导航行为，这是MVVM设计模式的核心优势之一。
+
+
+xaml 中的<UserControl.DataContext>中的vm参数要与D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\Utilites\DataTemplate.xaml中的相对应。
+
+这段代码定义了一个`ResourceDictionary`，它在WPF应用程序中用来声明资源，如样式、布局模板等。这个资源字典特别用于定义`DataTemplate`，这些`DataTemplate`指定了当特定类型的数据对象显示时应该使用哪个视图。以下是详细的注释和分析：
+
+```xml
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:GameManagerApp.ViewModels"  <!-- 定义了ViewModels命名空间的引用 -->
+                    xmlns:view="clr-namespace:GameManagerApp.View">  <!-- 定义了View命名空间的引用 -->
+
+    <!-- 数据模板定义开始 -->
+    
+    <!-- HomeVM的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:HomeVM}">  <!-- 当数据类型为HomeVM时使用的模板 -->
+        <view:Home/>  <!-- 指定Home视图作为HomeVM的视图表示 -->
+    </DataTemplate>
+    
+    <!-- CustomerVM的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:CustomerVM}">  <!-- 当数据类型为CustomerVM时使用的模板 -->
+        <view:Customers/>  <!-- 指定Customers视图作为CustomerVM的视图表示 -->
+    </DataTemplate>
+    
+    <!-- Products的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:Products}">  <!-- 当数据类型为Products时使用的模板 -->
+        <view:Products/>  <!-- 指定Products视图作为Products的视图表示 -->
+    </DataTemplate>
+    
+    <!-- OrdersVM的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:OrdersVM}">  <!-- 当数据类型为OrdersVM时使用的模板 -->
+        <view:Orders/>  <!-- 指定Orders视图作为OrdersVM的视图表示 -->
+    </DataTemplate>
+    
+    <!-- Transactions的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:Transactinos}">  <!-- 当数据类型为Transactinos时使用的模板，注意可能的拼写错误 -->
+        <view:Transactions/>  <!-- 指定Transactions视图作为Transactinos的视图表示 -->
+    </DataTemplate>
+    
+    <!-- Shipments的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:Shipments}">  <!-- 当数据类型为Shipments时使用的模板 -->
+        <view:Shipments/>  <!-- 指定Shipments视图作为Shipments的视图表示 -->
+    </DataTemplate>
+    
+    <!-- SettingVM的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:SettingVM}">  <!-- 当数据类型为SettingVM时使用的模板 -->
+        <view:Setting/>  <!-- 指定Setting视图作为SettingVM的视图表示 -->
+    </DataTemplate>
+</ResourceDictionary>
+```
+
+### 作用分析：
+
+这些`DataTemplate`的作用是将视图模型（ViewModels）与视图（Views）关联起来。当一个特定类型的视图模型作为数据上下文（DataContext）提供给一个控件时，WPF会查找这个资源字典，找到对应的`DataTemplate`以决定如何在UI中呈现这个视图模型的实例。
+
+- **提高灵活性**：通过这种方式，你可以在不修改视图模型代码的情况下改变视图模型的视图表示，只需更改`DataTemplate`即可。
+
+- **解耦视图和视图模型**：视图模型不需要知道自己将如何被呈现，视图也不需要知道视图模型的内部逻辑。它们之间通过数据绑定和命令绑定进行通信。
+
+- **简化导航**：在多视图应用程序中，可以简化导航逻辑。例如，`NavigationVM`可以更改`CurrentView`属性的值来切换显示的视图，而无需直接操作视图控件。
+
+这种模式特别适合于MVVM架构的WPF应用程序，使得视图与视图模型的映射和切换更加
+
+灵活和解耦。

@@ -1,28 +1,59 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vm="clr-namespace:GameManagerApp.ViewModels"
+                    xmlns:vm="clr-namespace:GameManagerApp.ViewModels" 
+                   
                     xmlns:view="clr-namespace:GameManagerApp.View">
+    <!-- 定义了ViewModels命名空间的引用 -->
+    <!-- 定义了View命名空间的引用 -->
 
+    <!-- 数据模板定义开始 -->
+
+    <!-- HomeVM的数据模板 -->
     <DataTemplate DataType="{x:Type vm:HomeVM}">
+        <!-- 当数据类型为HomeVM时使用的模板 -->
         <view:Home/>
-        
+        <!-- 指定Home视图作为HomeVM的视图表示 -->
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:Customers}">
+
+    <!-- CustomerVM的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:CustomerVM}">
+        <!-- 当数据类型为CustomerVM时使用的模板 -->
         <view:Customers/>
+        <!-- 指定Customers视图作为CustomerVM的视图表示 -->
     </DataTemplate>
+
+    <!-- Products的数据模板 -->
     <DataTemplate DataType="{x:Type vm:Products}">
+        <!-- 当数据类型为Products时使用的模板 -->
         <view:Products/>
+        <!-- 指定Products视图作为Products的视图表示 -->
     </DataTemplate>
+
+    <!-- OrdersVM的数据模板 -->
     <DataTemplate DataType="{x:Type vm:OrdersVM}">
+        <!-- 当数据类型为OrdersVM时使用的模板 -->
         <view:Orders/>
+        <!-- 指定Orders视图作为OrdersVM的视图表示 -->
     </DataTemplate>
+
+    <!-- Transactions的数据模板 -->
     <DataTemplate DataType="{x:Type vm:Transactinos}">
+        <!-- 当数据类型为Transactinos时使用的模板，注意可能的拼写错误 -->
         <view:Transactions/>
+        <!-- 指定Transactions视图作为Transactinos的视图表示 -->
     </DataTemplate>
+
+    <!-- Shipments的数据模板 -->
     <DataTemplate DataType="{x:Type vm:Shipments}">
+        <!-- 当数据类型为Shipments时使用的模板 -->
         <view:Shipments/>
+        <!-- 指定Shipments视图作为Shipments的视图表示 -->
     </DataTemplate>
+
+    <!-- SettingVM的数据模板 -->
     <DataTemplate DataType="{x:Type vm:SettingVM}">
+        <!-- 当数据类型为SettingVM时使用的模板 -->
         <view:Setting/>
+        <!-- 指定Setting视图作为SettingVM的视图表示 -->
     </DataTemplate>
 </ResourceDictionary>

@@ -34,7 +34,7 @@ namespace GameManagerApp.ViewModels
 
         // 私有方法，用于响应各导航命令，设置CurrentView为对应的视图模型实例
         private void Home(object obj) => CurrentView = new HomeVM();
-        private void Custmoer(object obj) => CurrentView = new Customers();
+        private void Custmoer(object obj) => CurrentView = new CustomerVM();
         private void Product(object obj) => CurrentView = new Products();
         private void Order(object obj) => CurrentView = new OrdersVM();
         private void Transactions(object obj) => CurrentView = new Transactinos();

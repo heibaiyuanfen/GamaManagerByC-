@@ -9,7 +9,7 @@ namespace GameManagerApp.ViewModels
 {
     // Customers类继承自ViewModelBase类。ViewModelBase类实现了INotifyPropertyChanged接口，
     // 允许Customers类能够通知视图（View）属性值的更改。
-    class Customers : Utilites.ViewModelBase
+    class CustomerVM : Utilites.ViewModelBase
     {
         private readonly PageModel _PageModel; // 声明一个私有只读字段_PageModel，类型为PageModel。
                                                // 这个字段用于在Customers视图模型中持有一个模型实例。
@@ -28,7 +28,7 @@ namespace GameManagerApp.ViewModels
         }
 
         // Customers类的构造函数。
-        public Customers()
+        public CustomerVM()
         {
             _PageModel = new PageModel(); // 在构造函数中实例化_PageModel。
             CustmoerID = 100528; // 设置CustmoerID的初始值为100528。
