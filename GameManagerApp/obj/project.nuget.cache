@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "feyDGrCVSnDNSgoGKkjxKYsBZlugrEDFi4OtG0LUJivPfhyKHWMPyRuNs8SKpG2oUM+2C4vgrLSL8zuDThTFAQ==",
+  "dgSpecHash": "j/5WjjIhCmfqtKsFYg0HJnDH5csjeOe4LBSGvSj8dH/pxbOFy3+YIEoKExmbArZsETtbNQk4rMdm70LLk2ss7A==",
   "success": true,
   "projectFilePath": "D:\\Users\\wufeifan\\Documents\\GitHub\\tasksmanager\\GameManagerApp\\GamaManagerByC-\\GameManagerApp\\GameManagerApp.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\wufeifan\\.nuget\\packages\\microsoft.win32.systemevents\\8.0.0\\microsoft.win32.systemevents.8.0.0.nupkg.sha512",
+    "C:\\Users\\wufeifan\\.nuget\\packages\\system.drawing.common\\8.0.2\\system.drawing.common.8.0.2.nupkg.sha512"
+  ],
   "logs": []
 }

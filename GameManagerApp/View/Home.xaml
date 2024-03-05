@@ -3,10 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GameManagerApp.View"
-             
+             xmlns:vm="clr-namespace:GameManagerApp.ViewModels"
+             xmlns:local="clr-namespace:GameManagerApp.Convert"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="622">
+    <UserControl.Resources>
+        <local:IconToImageSourceConverter x:Key="IconConverter"/>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <vm:HomeVM/>
+    </UserControl.DataContext>
     <Grid>
         <Border CornerRadius="0,20,20,0">
             <Border.Background>
@@ -14,6 +20,39 @@
                             Stretch="None"/>
             </Border.Background>
         </Border>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="228"/>
+                <ColumnDefinition Width="622"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid Grid.Column="1">
+            <ListBox ItemsSource="{Binding Games}"
+                     SelectedItem="{Binding SelectedGame}"
+                     Background="Transparent">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="50" Height="50" 
+                       Source="{Binding GameIcon, Converter={StaticResource IconConverter}}" />
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Content="Open Game" Command="{Binding OpenGameCommand}" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+            <!-- 创建“扫描磁盘”按钮，点击时执行绑定的ScanDiskCommand命令 -->
+            <RadioButton Style="{StaticResource Btnstyle}"
+                Content="Scan Disk" Command="{Binding ScanDiskCommand}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <!-- 创建“添加游戏”按钮，点击时执行绑定的AddGameCommand命令 -->
+            <!-- 注意：CommandParameter的使用示例，实际应用中需要根据实际情况获取路径 -->
+            <RadioButton Style="{StaticResource Btnstyle}"
+                Content="Add Game" Command="{Binding AddGameCommand}"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="300,0,0,545" 
+                />
+        </Grid>
+
+
     </Grid>
 </UserControl>
  

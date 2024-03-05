@@ -60,3 +60,6 @@ D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\G
 D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\View\Shipments.baml
 D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\View\Transactions.baml
 D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\Utilites\DataTemplate.baml
+D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\GameManagerApp.csproj.AssemblyReference.cache
+D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\bin\Debug\net8.0-windows\System.Drawing.Common.dll
+D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\GameManagerApp.csproj.CopyComplete
