@@ -14,6 +14,16 @@ namespace GameManagerApp.ViewModels
     // HomeVM类继承自ViewModelBase，提供了属性更改通知的基础结构
     class HomeVM : ViewModelBase
     {
+
+        // 私有字段，用于存储当前显示的视图模型
+        private object _GameInfoView;
+
+        public object CurrentView
+        {
+            get { return _GameInfoView; }
+            set { _GameInfoView = value; OnPropertyChanged(); }
+        }
+
         // Games集合存储游戏模型，支持UI自动更新
         public ObservableCollection<GameModel> Games { get; private set; } = new ObservableCollection<GameModel>();
 
@@ -25,13 +35,33 @@ namespace GameManagerApp.ViewModels
         public ICommand AddGameCommand { get; set; }
         public ICommand OpenGameCommand { get; set; }
 
+        //游戏信息界面的指令，不知道是否可以用上，先写上
+        public ICommand GameInfoCommand { get; private set; }
+
+
+
+        private void GameInfo(object obj) => CurrentView = new GameInfoVM();
+
+
         // 构造函数中初始化命令
         public HomeVM()
         {
             // 初始化命令，绑定相应的操作
             AddGameCommand = new RelayCommand(_ => AddGame());
             OpenGameCommand = new RelayCommand(game => OpenGame());
+            GameInfoCommand = new RelayCommandforGameInfo<GameModel>(ShowGameInfo);
         }
+
+
+        private void ShowGameInfo(GameModel game)
+        {
+            // 这里实现你想要执行的逻辑，比如显示游戏详情
+            // 示例：MessageBox.Show($"展示游戏信息：{game.Name}");
+            MessageBox.Show(game.Name);
+            CurrentView = new GameInfoVM();
+        }
+
+
 
         // AddGame方法用于添加游戏
         private void AddGame()
@@ -51,9 +81,11 @@ namespace GameManagerApp.ViewModels
                     return;
                 }
 
+                var gameIcon = Icon.ExtractAssociatedIcon(openFileDialog.FileName); // 提取图标
                 // 创建新的GameModel实例并添加到Games集合
                 var game = new GameModel
                 {
+                    GameIcon = gameIcon,
                     Name = Path.GetFileNameWithoutExtension(selectedFilePath),
                     FilePath = selectedFilePath,
                 };
@@ -76,6 +108,12 @@ namespace GameManagerApp.ViewModels
                     // 异常处理逻辑，例如显示错误消息
                 }
             }
+        }
+
+
+         private  void SelectGameInfo()
+        {
+
         }
 
         // DetermineImagePathForGame方法用于根据游戏路径获取游戏图片路径

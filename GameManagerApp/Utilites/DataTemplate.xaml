@@ -15,6 +15,13 @@
         <!-- 指定Home视图作为HomeVM的视图表示 -->
     </DataTemplate>
 
+    <!-- GameInfo的数据模板 -->
+    <DataTemplate DataType="{x:Type vm:GameInfoVM}">
+        <!-- 当数据类型为HomeVM时使用的模板 -->
+        <view:GameInfo/>
+        <!-- 指定Home视图作为HomeVM的视图表示 -->
+    </DataTemplate>
+
     <!-- CustomerVM的数据模板 -->
     <DataTemplate DataType="{x:Type vm:CustomerVM}">
         <!-- 当数据类型为CustomerVM时使用的模板 -->

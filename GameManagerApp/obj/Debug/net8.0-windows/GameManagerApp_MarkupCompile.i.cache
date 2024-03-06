@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\App.xaml
-131022655176
+14258555915
 
-27148535073
+30-217216439
 199-96800541
-MainWindow.xaml;Styles\Button.xaml;Styles\Image.xaml;Styles\Page.xaml;Styles\Text.xaml;Utilites\DataTemplate.xaml;View\Customers.xaml;View\Home.xaml;View\Orders.xaml;View\Products.xaml;View\Setting.xaml;View\Shipments.xaml;View\Transactions.xaml;
+MainWindow.xaml;Styles\Button.xaml;Styles\Image.xaml;Styles\Page.xaml;Styles\Text.xaml;Utilites\DataTemplate.xaml;View\Customers.xaml;View\GameInfo.xaml;View\Home.xaml;View\Orders.xaml;View\Products.xaml;View\Setting.xaml;View\Shipments.xaml;View\Transactions.xaml;
 
 True
 

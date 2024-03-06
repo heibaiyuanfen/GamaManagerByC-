@@ -63,3 +63,5 @@ D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\G
 D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\GameManagerApp.csproj.AssemblyReference.cache
 D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\bin\Debug\net8.0-windows\System.Drawing.Common.dll
 D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\GameManagerApp.csproj.CopyComplete
+D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\View\GameInfo.g.cs
+D:\Users\wufeifan\Documents\GitHub\tasksmanager\GameManagerApp\GamaManagerByC-\GameManagerApp\obj\Debug\net8.0-windows\View\GameInfo.baml
