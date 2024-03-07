@@ -8,12 +8,21 @@ using System.Diagnostics; // 提供访问系统进程的类
 using System.Drawing; // 处理图像和图标
 using System.Windows; // WPF的基本类，例如MessageBox
 using GameManagerApp.Models;
+using Microsoft.EntityFrameworkCore;
+using GameManagerApp.Repository;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
 
 namespace GameManagerApp.ViewModels
 {
     // HomeVM类继承自ViewModelBase，提供了属性更改通知的基础结构
     class HomeVM : ViewModelBase
     {
+
+
+        private readonly GameInfoRepository _gameInfoRepository;
+
 
         // 私有字段，用于存储当前显示的视图模型
         private object _GameInfoView;
@@ -64,34 +73,73 @@ namespace GameManagerApp.ViewModels
 
 
         // AddGame方法用于添加游戏
-        private void AddGame()
+        // 异步的AddGame方法
+        private async Task AddGame()
         {
-            // 打开文件对话框让用户选择游戏文件
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "游戏文件 (*.exe)|*.exe"; // 设置文件过滤器
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "游戏文件 (*.exe)|*.exe" // 设置文件过滤器
+            };
+
             if (openFileDialog.ShowDialog() == true) // 如果用户选择了文件
             {
                 string selectedFilePath = openFileDialog.FileName;
+                string fileName = Path.GetFileNameWithoutExtension(selectedFilePath);
 
                 // 检查所选游戏是否已存在
                 if (Games.Any(game => game.FilePath.Equals(selectedFilePath, StringComparison.OrdinalIgnoreCase)))
                 {
-                    // 如果游戏已存在，则显示错误消息
                     MessageBox.Show("此游戏已存在！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                var gameIcon = Icon.ExtractAssociatedIcon(openFileDialog.FileName); // 提取图标
-                // 创建新的GameModel实例并添加到Games集合
-                var game = new GameModel
+                try
                 {
-                    GameIcon = gameIcon,
-                    Name = Path.GetFileNameWithoutExtension(selectedFilePath),
-                    FilePath = selectedFilePath,
-                };
-                Games.Add(game);
+                    // 提取图标并转换为字节数组
+                    var iconBytes = File.ReadAllBytes(openFileDialog.FileName); // 这里假设图标文件与exe同名
+                                                                                // 创建新的GameInfo实例
+                    var gameInfo = new GameInfo
+                    {
+                        Name = fileName,
+                        FilePath = selectedFilePath,
+                        Icon = iconBytes
+                    };
+
+                    // 调用仓储方法添加游戏信息到数据库
+                    await _gameInfoRepository.Add(gameInfo);
+
+
+                    
+                    // 创建新的GameModel实例并添加到Games集合以更新UI
+                    var gameModel = new GameModel
+                    {
+                        Name = fileName,
+                        FilePath = selectedFilePath,
+                        // 这里需要实现Icon转换为ImageSource的逻辑
+                        GameIcon = ConvertBytesToIcon(iconBytes)
+                    };
+
+                    Games.Add(gameModel);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"添加游戏时出错: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
+
+        private Icon ConvertBytesToIcon(byte[] iconBytes)
+        {
+            if (iconBytes == null || iconBytes.Length == 0)
+                return null;
+
+            using (var stream = new MemoryStream(iconBytes))
+            {
+                return new Icon(stream);
+            }
+        }
+
+
 
         // OpenGame方法用于打开选中的游戏
         private void OpenGame()

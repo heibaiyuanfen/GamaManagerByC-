@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:GameManagerApp.ViewModels"
-             xmlns:local="clr-namespace:GameManagerApp.Convert"
+             xmlns:local ="clr-namespace:GameManagerApp.Convert"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="622">
     <UserControl.Resources>
