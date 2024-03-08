@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using GameManagerApp.Repository;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using GameManagerApp.IRepository;
 
 
 namespace GameManagerApp.ViewModels
@@ -21,7 +22,7 @@ namespace GameManagerApp.ViewModels
     {
 
 
-        private readonly GameInfoRepository _gameInfoRepository;
+        private IGameInfoRepository _gameInfoRepository;
 
 
         // 私有字段，用于存储当前显示的视图模型
@@ -59,7 +60,43 @@ namespace GameManagerApp.ViewModels
             AddGameCommand = new RelayCommand(_ => AddGame());
             OpenGameCommand = new RelayCommand(game => OpenGame());
             GameInfoCommand = new RelayCommandforGameInfo<GameModel>(ShowGameInfo);
+            LoadGames();
         }
+
+
+        private async void LoadGames()
+        {
+
+            _gameInfoRepository = new GameInfoRepository();
+            try
+            {
+                var games = await _gameInfoRepository.GetAllAsync();
+                foreach (var gameInfo in games)
+                {
+
+                    var gameIcon = Icon.ExtractAssociatedIcon(gameInfo.FilePath);
+                    // 可以根据需要将Icon转换为ImageSource
+                    // 此处示例仅直接使用FilePath
+                    var gameModel = new GameModel
+                    {
+                        Name = gameInfo.Name,
+                        FilePath = gameInfo.FilePath,
+                        // 假设我们有方法将存储的图标数据转换为ImageSource
+                        GameIcon = gameIcon
+                       
+                    };
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Games.Add(gameModel);
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载游戏时出错: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
 
 
         private void ShowGameInfo(GameModel game)
@@ -76,6 +113,9 @@ namespace GameManagerApp.ViewModels
         // 异步的AddGame方法
         private async Task AddGame()
         {
+
+            _gameInfoRepository = new GameInfoRepository();
+
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "游戏文件 (*.exe)|*.exe" // 设置文件过滤器
@@ -85,38 +125,40 @@ namespace GameManagerApp.ViewModels
             {
                 string selectedFilePath = openFileDialog.FileName;
                 string fileName = Path.GetFileNameWithoutExtension(selectedFilePath);
-
-                // 检查所选游戏是否已存在
-                if (Games.Any(game => game.FilePath.Equals(selectedFilePath, StringComparison.OrdinalIgnoreCase)))
+                
+                // 在数据库中检查游戏是否存在
+                var existingGame = await _gameInfoRepository.GetByNameAsync(fileName);
+                if (existingGame != null)
                 {
-                    MessageBox.Show("此游戏已存在！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // 如果游戏已存在，从数据库获取信息并提取图标
+                    // ...
+                    MessageBox.Show($"游戏已经存在: {existingGame.Name}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
                 try
                 {
-                    // 提取图标并转换为字节数组
-                    var iconBytes = File.ReadAllBytes(openFileDialog.FileName); // 这里假设图标文件与exe同名
-                                                                                // 创建新的GameInfo实例
+                    // 提取图标
+                    var gameIcon = Icon.ExtractAssociatedIcon(selectedFilePath);
+
+                    // 创建游戏信息对象
                     var gameInfo = new GameInfo
                     {
                         Name = fileName,
                         FilePath = selectedFilePath,
-                        Icon = iconBytes
+                        // 根据实际情况可能需要存储图标数据
+
                     };
 
-                    // 调用仓储方法添加游戏信息到数据库
+                    // 将游戏信息存入数据库
                     await _gameInfoRepository.Add(gameInfo);
 
-
-                    
-                    // 创建新的GameModel实例并添加到Games集合以更新UI
+                    // 创建新的 GameModel 实例并添加到 Games 集合以更新 UI
                     var gameModel = new GameModel
                     {
                         Name = fileName,
                         FilePath = selectedFilePath,
-                        // 这里需要实现Icon转换为ImageSource的逻辑
-                        GameIcon = ConvertBytesToIcon(iconBytes)
+                        GameIcon = gameIcon
                     };
 
                     Games.Add(gameModel);
@@ -128,21 +170,12 @@ namespace GameManagerApp.ViewModels
             }
         }
 
-        private Icon ConvertBytesToIcon(byte[] iconBytes)
-        {
-            if (iconBytes == null || iconBytes.Length == 0)
-                return null;
-
-            using (var stream = new MemoryStream(iconBytes))
-            {
-                return new Icon(stream);
-            }
-        }
 
 
 
-        // OpenGame方法用于打开选中的游戏
-        private void OpenGame()
+
+                // OpenGame方法用于打开选中的游戏
+                private void OpenGame()
         {
             if (SelectedGame != null && !string.IsNullOrEmpty(SelectedGame.FilePath))
             {
