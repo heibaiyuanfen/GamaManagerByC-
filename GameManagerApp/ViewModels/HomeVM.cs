@@ -192,39 +192,42 @@ namespace GameManagerApp.ViewModels
         {
             if (SelectedGame != null && !string.IsNullOrEmpty(SelectedGame.FilePath))
             {
+                // 检查游戏进程是否已存在
                 var gameProcess = _processPool.RentProcess(SelectedGame.FilePath);
 
-                // 检查游戏进程是否已经启动，如果没有，启动它
-                if (gameProcess != null && gameProcess.Process != null)
+                // 如果进程已经存在且没有退出，尝试将其窗口带到前台
+                if (gameProcess != null && gameProcess.Process != null && !gameProcess.Process.HasExited)
                 {
-                    // 如果游戏已经启动（即Process已经存在），则不需要再次启动
-                    if (!gameProcess.Process.HasExited && gameProcess.Process.StartTime != DateTime.MinValue)
-                    {
-                        MessageBox.Show("游戏已在之前启动。", "信息", MessageBoxButton.OK, MessageBoxImage.Information);
-                        return;
-                    }
+                    MessageBox.Show("游戏已在之前启动。", "信息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // 将游戏窗口带到前台的代码应该在这里实现
+                    // 例如：WinApi.BringProcessToFront(gameProcess.Process.Id);
+                    return;
+                }
 
-                    try
+                // 尝试启动游戏
+                try
+                {
+                    // 创建并启动游戏进程
+                    var process = new Process
                     {
-                        // 显式地启动游戏进程
-                        if (!gameProcess.Process.Start())
-                        {
-                            MessageBox.Show("无法启动游戏。", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
-                        }
+                        StartInfo = new ProcessStartInfo(SelectedGame.FilePath) { UseShellExecute = true },
+                        EnableRaisingEvents = true // 允许使用Exited事件
+                    };
 
-                        // 设置退出事件处理
-                        gameProcess.Process.EnableRaisingEvents = true;
-                        gameProcess.Process.Exited += (sender, args) =>
-                        {
-                            _processPool.ReturnProcess(SelectedGame.FilePath);
-                            gameProcess.Process.Dispose();
-                        };
-                    }
-                    catch (Exception ex)
+                    process.Start();
+                    // 记录启动的游戏进程
+                    //_processPool.AddProcess(SelectedGame.FilePath, process);
+
+                    process.Exited += (sender, args) =>
                     {
-                        MessageBox.Show($"启动游戏时出现异常: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                        // 当游戏退出时，执行归还和清理操作
+                        _processPool.ReturnProcess(SelectedGame.FilePath);
+                        process.Dispose();
+                    };
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"无法启动游戏: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
