@@ -13,6 +13,7 @@ using GameManagerApp.Repository;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using GameManagerApp.IRepository;
+using GameManagerApp.Pool;
 
 
 namespace GameManagerApp.ViewModels
@@ -21,6 +22,8 @@ namespace GameManagerApp.ViewModels
     class HomeVM : ViewModelBase
     {
 
+
+        private GameProcessPool _processPool = new GameProcessPool();
 
         private IGameInfoRepository _gameInfoRepository;
 
@@ -60,6 +63,7 @@ namespace GameManagerApp.ViewModels
             AddGameCommand = new RelayCommand(_ => AddGame());
             OpenGameCommand = new RelayCommand(game => OpenGame());
             GameInfoCommand = new RelayCommandforGameInfo<GameModel>(ShowGameInfo);
+            _processPool.AddExistingProcessesAsync();
             LoadGames();
         }
 
@@ -104,7 +108,14 @@ namespace GameManagerApp.ViewModels
             // 这里实现你想要执行的逻辑，比如显示游戏详情
             // 示例：MessageBox.Show($"展示游戏信息：{game.Name}");
             MessageBox.Show(game.Name);
-            CurrentView = new GameInfoVM();
+
+            var gameInfo = new GameInfo
+            {
+                FilePath = game.FilePath,
+                Name = game.Name,
+            };
+
+            CurrentView = new GameInfoVM(gameInfo);
         }
 
 
@@ -174,25 +185,56 @@ namespace GameManagerApp.ViewModels
 
 
 
-                // OpenGame方法用于打开选中的游戏
-                private void OpenGame()
+
+
+
+        private async void OpenGame()
         {
             if (SelectedGame != null && !string.IsNullOrEmpty(SelectedGame.FilePath))
             {
-                try
+                var gameProcess = _processPool.RentProcess(SelectedGame.FilePath);
+
+                // 检查游戏进程是否已经启动，如果没有，启动它
+                if (gameProcess != null && gameProcess.Process != null)
                 {
-                    // 根据游戏文件路径启动游戏
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(SelectedGame.FilePath) { UseShellExecute = true });
-                }
-                catch (Exception ex)
-                {
-                    // 异常处理逻辑，例如显示错误消息
+                    // 如果游戏已经启动（即Process已经存在），则不需要再次启动
+                    if (!gameProcess.Process.HasExited && gameProcess.Process.StartTime != DateTime.MinValue)
+                    {
+                        MessageBox.Show("游戏已在之前启动。", "信息", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+
+                    try
+                    {
+                        // 显式地启动游戏进程
+                        if (!gameProcess.Process.Start())
+                        {
+                            MessageBox.Show("无法启动游戏。", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        // 设置退出事件处理
+                        gameProcess.Process.EnableRaisingEvents = true;
+                        gameProcess.Process.Exited += (sender, args) =>
+                        {
+                            _processPool.ReturnProcess(SelectedGame.FilePath);
+                            gameProcess.Process.Dispose();
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"启动游戏时出现异常: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
         }
 
 
-         private  void SelectGameInfo()
+
+
+
+
+        private void SelectGameInfo()
         {
 
         }

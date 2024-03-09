@@ -63,6 +63,15 @@
                     Grid.Column="1">
                 <TextBlock Text="AddGame"/>
             </Button>
+            <Button Height="50"
+                Width="100"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                    Command="{Binding OpenGameCommand}" Margin="0,325,0,0"
+                    CommandParameter="{Binding SelectedGame}">
+                <TextBlock Text="OpenGame"/>
+            </Button>
+
         </Grid>
     </Grid>
 </UserControl>

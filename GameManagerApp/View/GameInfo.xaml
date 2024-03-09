@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:GameManagerApp.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="622">
+             d:DesignHeight="600" d:DesignWidth="622"
+             Style="{StaticResource Page_Style}">
 
     <UserControl.DataContext>
         <vm:GameInfoVM/>
@@ -15,8 +16,35 @@
         <Border CornerRadius="0,20,20,0">
             <Border.Background>
                 <ImageBrush ImageSource="/back.png"
-                            Stretch="None"/>
+                            Stretch="Fill"/>
             </Border.Background>
         </Border>
+
+        <DockPanel>
+            <!-- Sidebar -->
+            <StackPanel DockPanel.Dock="Left" Width="60" Background="#2E333A">
+                <!-- Put your sidebar content here, such as buttons or icons -->
+            </StackPanel>
+
+            <!-- Main content area -->
+            <Grid>
+                <!-- Top Bar -->
+                <DockPanel DockPanel.Dock="Top" Height="60"
+                           VerticalAlignment="Top"
+                           Background="#23272A">
+                    <!-- Top bar content like buttons or search bar -->
+                </DockPanel>
+
+                <!-- Content -->
+                <Grid Margin="0,60,0,0">
+                    <!-- Replace the below content with your own content -->
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="White" FontSize="16">
+                    Main Content Area
+                    </TextBlock>
+                </Grid>
+            </Grid>
+        </DockPanel>
+
     </Grid>
 </UserControl>
