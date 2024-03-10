@@ -11,7 +11,7 @@
     <UserControl.DataContext>
         <vm:GameInfoVM/>
     </UserControl.DataContext>
-    
+
     <Grid>
         <Border CornerRadius="0,20,20,0">
             <Border.Background>
@@ -34,15 +34,15 @@
                            Background="#23272A">
                     <!-- Top bar content like buttons or search bar -->
                 </DockPanel>
-
                 <!-- Content -->
                 <Grid Margin="0,60,0,0">
-                    <!-- Replace the below content with your own content -->
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Foreground="White" FontSize="16">
-                    Main Content Area
-                    </TextBlock>
+                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="37,171,0,0">
+                        <!-- Replace the below TextBlock with your actual content displaying logic -->
+                        <TextBlock Text="{Binding RunningTime}" Foreground="White" FontSize="14" Margin="60,60,60,10"/>
+                        <TextBlock Text="{Binding RunningTime}" Foreground="Black" FontSize="16" Height="68" Width="220"/>
+                    </StackPanel>
                 </Grid>
+
             </Grid>
         </DockPanel>
 

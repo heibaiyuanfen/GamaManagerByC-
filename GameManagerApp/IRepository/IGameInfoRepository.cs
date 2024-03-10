@@ -20,5 +20,9 @@ namespace GameManagerApp.IRepository
         IEnumerable<GameInfo> GetAll();
 
         Task<IEnumerable<GameInfo>> GetAllAsync();
+        Task UpdateRunningTimeAsync(string gameFilePath, string runningTimeString);
+
+        Task<GameInfo> GetByFilePathAsync(string filePath);
+        Task<GameInfo> GetGameInfoAsync(string gameId);
     }
 }

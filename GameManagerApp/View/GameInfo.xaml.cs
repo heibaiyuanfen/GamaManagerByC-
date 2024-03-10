@@ -23,6 +23,7 @@ namespace GameManagerApp.View
         public GameInfo()
         {
             InitializeComponent();
+
         }
     }
 }

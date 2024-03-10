@@ -43,7 +43,7 @@ namespace GameManagerApp.Pool
                     matchingProcess.EnableRaisingEvents = true; // 启用退出事件
                     matchingProcess.Exited += (sender, e) =>
                     {
-                        this.ReturnProcess(gameInfo.FilePath); // 当进程结束时，“归还”
+                        this.ReturnProcessAsync(gameInfo.FilePath); // 当进程结束时，“归还”
                     };
 
                     // 注意：这里可能需要考虑线程安全问题，因为 _pool 是共享资源
@@ -74,7 +74,7 @@ namespace GameManagerApp.Pool
 
 
         // “借出”进程
-        public GameProcess RentProcess(string gameFilePath)
+        public async Task<GameProcess> RentProcessAsync(string gameFilePath)
         {
             // 检查进程是否已存在
             if (_pool.TryGetValue(gameFilePath, out var gameProcess) && gameProcess.Process != null && !gameProcess.Process.HasExited)
@@ -90,7 +90,9 @@ namespace GameManagerApp.Pool
                 StartInfo = new ProcessStartInfo(gameFilePath) { UseShellExecute = true },
                 EnableRaisingEvents = true
             };
-            process.Start();
+
+            // 由于 Process.Start() 不是一个异步方法，因此这里使用 Task.Run 来在后台线程中启动它
+            await Task.Run(() => process.Start());
 
             gameProcess = new GameProcess
             {
@@ -101,16 +103,18 @@ namespace GameManagerApp.Pool
             _pool[gameFilePath] = gameProcess;
 
             // 监听进程退出事件
-            process.Exited += (sender, e) =>
+            process.Exited += async (sender, e) =>
             {
-                this.ReturnProcess(gameFilePath); // 当进程结束时，“归还”
+                // 当进程结束时，执行异步的“归还”操作
+                await ReturnProcessAsync(gameFilePath);
             };
 
             return gameProcess;
         }
 
+
         // “归还”进程
-        public void ReturnProcess(string gameFilePath)
+        public async Task ReturnProcessAsync(string gameFilePath)
         {
             if (_pool.TryGetValue(gameFilePath, out var gameProcess))
             {
@@ -121,7 +125,23 @@ namespace GameManagerApp.Pool
                 gameProcess.RunningTime = runningTime;
 
                 // TODO: 在这里记录结束时间和运行时间，可以更新数据库或进行其他操作
+                // 将运行时间转换为所需的字符串格式，这里假设格式为"小时:分钟:秒"
+                string runningTimeString = $"{runningTime.Hours}:{runningTime.Minutes}:{runningTime.Seconds}";
                 // ...
+
+                // 在这里更新数据库
+                try
+                {
+                    // 假设 _gameInfoRepository 有一个名为 UpdateRunningTimeAsync 的方法来更新运行时间
+                    await _gameInfoRepository.UpdateRunningTimeAsync(gameFilePath, runningTimeString);
+                }
+                catch (Exception ex)
+                {
+                    // 处理可能发生的任何异常，如记录日志或显示错误消息
+                    Console.WriteLine($"An error occurred while updating running time: {ex.Message}");
+                }
+
+
 
                 // 进程已结束，可以从池中移除
                 _pool.Remove(gameFilePath);

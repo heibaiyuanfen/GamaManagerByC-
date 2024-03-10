@@ -4,11 +4,58 @@ using System.Data.SqlClient;
 using GameManagerApp.IRepository;
 using System.Net;
 using GameManagerApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameManagerApp.Repository
 {
     public class GameInfoRepository : RepositoryBase, IGameInfoRepository
     {
+
+
+        public async Task UpdateRunningTimeAsync(string gameFilePath, string newRunningTimeString)
+        {
+            using (var connection = GetSqlConnection())
+            {
+                // 先获取当前的累计运行时间
+                var currentGame = await GetByFilePathAsync(gameFilePath);
+                var totalRunningTime = TimeSpan.Parse(currentGame.runningtime ?? "00:00:00").Add(TimeSpan.Parse(newRunningTimeString)).ToString();
+
+                // 更新数据库中的运行时间
+                var command = new SqlCommand("UPDATE Games SET runningtime = @RunningTime WHERE FilePath = @FilePath", connection);
+                command.Parameters.AddWithValue("@RunningTime", totalRunningTime);
+                command.Parameters.AddWithValue("@FilePath", gameFilePath);
+
+                await connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+
+
+        public async Task<GameInfo> GetByFilePathAsync(string filePath)
+        {
+            using (var connection = GetSqlConnection())
+            {
+                var command = new SqlCommand("SELECT * FROM Games WHERE FilePath = @FilePath", connection);
+                command.Parameters.AddWithValue("@FilePath", filePath);
+
+                await connection.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        return new GameInfo
+                        {
+                            Id = reader["Id"].ToString(),
+                            Name = reader["Name"].ToString(),
+                            FilePath = reader["FilePath"].ToString(),
+                            runningtime = reader.IsDBNull(reader.GetOrdinal("RunningTime")) ? null : reader["RunningTime"].ToString()
+                        };
+                    }
+                }
+            }
+            return null; // 没有找到指定FilePath的游戏
+        }
+
 
         public async Task<IEnumerable<GameInfo>> GetAllAsync()
         {
@@ -179,6 +226,34 @@ namespace GameManagerApp.Repository
         {
             throw new NotImplementedException();
         }
+
+
+
+        //用于gameinfovm中
+        public async Task<GameInfo> GetGameInfoAsync(string Filepath)
+        {
+            using var connection = GetSqlConnection();
+            var command = new SqlCommand("SELECT * FROM Games WHERE FilePath = @FilePath", connection);
+            command.Parameters.AddWithValue("@FilePath", Filepath);
+
+            await connection.OpenAsync();
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                if (await reader.ReadAsync())
+                {
+                    return new GameInfo
+                    {
+                        Id = reader["Id"].ToString(),
+                        Name = reader["Name"].ToString(),
+                        FilePath = reader["FilePath"].ToString(),
+                        runningtime = reader.IsDBNull(reader.GetOrdinal("runningtime")) ? null : reader["runningtime"].ToString()
+                        // 根据实际情况添加其他字段
+                    };
+                }
+            }
+            return null; // 如果没有找到对应ID的游戏信息
+        }
+
 
         // ... Other methods from IGameInfoRepository
     }

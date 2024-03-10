@@ -245,3 +245,35 @@ namespace GameManagerApp.ViewModels
 ### 结构图的说明
 
 这个项目结构图清晰地反映了MVVM架构的分层和职责划分，促进了关注点分离和代码维护性。视图仅负责显示和用户交互，视图模型处理视图逻辑，并转换模型数据以供视图使用，而模型代表应用程序的数据和业务规则。这样的结构有助于测试和开发，因为它允许你独立地修改和测试每一层。
+
+
+
+
+错误 CS0407 表示您尝试将一个异步 lambda 表达式（返回一个 `Task`）传递给不支持异步操作的委托。看起来您用于 `GameInfoCommand` 的 `RelayCommand` 正在期望一个 `Action<GameModel>` 委托，但是您提供了一个 `Func<GameModel, Task>` 委托，因为您的 `ShowGameInfo` 方法中使用了 `async` 关键字。
+
+要修复这个问题，您可以将 `ShowGameInfo` 方法改为 `async void` 方法而不是 `async Task`，这将使其与 `Action<GameModel>` 委托兼容。这是对一般规则“避免使用 async void 方法”的一个例外，因为对于事件处理器（包括命令执行）来说这是可以接受的。
+
+以下是调整 `ShowGameInfo` 方法的一个例子：
+
+```csharp
+private async void ShowGameInfo(GameModel game)
+{
+    // 您现有的代码
+    GameInfo gameInfo = await _gameInfoRepository.GetGameInfoAsync(game.FilePath);
+    CurrentView = new GameInfoVM(gameInfo);
+    // 其余的代码
+}
+```
+
+然后在初始化 `GameInfoCommand` 时，您不需要改变任何东西，因为现在 `ShowGameInfo` 是一个 `async void` 方法，并且可以直接使用：
+
+```csharp
+public HomeVM()
+{
+    // ...
+    GameInfoCommand = new RelayCommand<GameModel>(ShowGameInfo);
+    // ...
+}
+```
+
+请注意，通常不鼓励使用 `async void` 方法，因为它们是“不管不顾”（fire and forget），且 `async void` 方法内部抛出的任何异常都会导致应用程序崩溃。然而，在需要进行异步操作的事件处理器或命令委托中使用 `async void` 是正确的做法。务必在 `async void` 方法内进行适当的异常处理，以避免未处理的异常。

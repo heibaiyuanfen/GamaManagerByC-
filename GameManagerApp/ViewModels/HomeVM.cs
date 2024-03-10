@@ -25,7 +25,7 @@ namespace GameManagerApp.ViewModels
 
         private GameProcessPool _processPool = new GameProcessPool();
 
-        private IGameInfoRepository _gameInfoRepository;
+        private IGameInfoRepository _gameInfoRepository = new GameInfoRepository();
 
 
         // 私有字段，用于存储当前显示的视图模型
@@ -38,7 +38,13 @@ namespace GameManagerApp.ViewModels
         }
 
         // Games集合存储游戏模型，支持UI自动更新
-        public ObservableCollection<GameModel> Games { get; private set; } = new ObservableCollection<GameModel>();
+        private static bool _isDataLoaded = false;
+        private static ObservableCollection<GameModel> _games = new ObservableCollection<GameModel>();
+        public ObservableCollection<GameModel> Games
+        {
+            get { return _games; }
+            set { _games = value; OnPropertyChanged(); }
+        }
 
         // SelectedGame属性表示当前选中的游戏
         public GameModel SelectedGame { get; set; }
@@ -51,7 +57,7 @@ namespace GameManagerApp.ViewModels
         //游戏信息界面的指令，不知道是否可以用上，先写上
         public ICommand GameInfoCommand { get; private set; }
 
-
+       
 
         private void GameInfo(object obj) => CurrentView = new GameInfoVM();
 
@@ -60,18 +66,29 @@ namespace GameManagerApp.ViewModels
         public HomeVM()
         {
             // 初始化命令，绑定相应的操作
-            AddGameCommand = new RelayCommand(_ => AddGame());
+            AddGameCommand = new AsyncRelayCommand(async () => await AddGame());
             OpenGameCommand = new RelayCommand(game => OpenGame());
             GameInfoCommand = new RelayCommandforGameInfo<GameModel>(ShowGameInfo);
-            _processPool.AddExistingProcessesAsync();
-            LoadGames();
+
+            if (!_isDataLoaded)
+            {
+                InitializeAsync();
+                _isDataLoaded = true;
+            }
+
+
         }
 
+        private async void InitializeAsync()
+        {
+            await _processPool.AddExistingProcessesAsync();
+            await LoadGames();
+        }
 
-        private async void LoadGames()
+        private async Task LoadGames()
         {
 
-            _gameInfoRepository = new GameInfoRepository();
+            
             try
             {
                 var games = await _gameInfoRepository.GetAllAsync();
@@ -103,17 +120,15 @@ namespace GameManagerApp.ViewModels
 
 
 
-        private void ShowGameInfo(GameModel game)
+        private async void ShowGameInfo(GameModel game)
         {
             // 这里实现你想要执行的逻辑，比如显示游戏详情
             // 示例：MessageBox.Show($"展示游戏信息：{game.Name}");
-            MessageBox.Show(game.Name);
+           
 
-            var gameInfo = new GameInfo
-            {
-                FilePath = game.FilePath,
-                Name = game.Name,
-            };
+            GameInfo gameInfo = await _gameInfoRepository.GetGameInfoAsync(game.FilePath);
+
+
 
             CurrentView = new GameInfoVM(gameInfo);
         }
@@ -125,7 +140,7 @@ namespace GameManagerApp.ViewModels
         private async Task AddGame()
         {
 
-            _gameInfoRepository = new GameInfoRepository();
+            
 
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -193,44 +208,10 @@ namespace GameManagerApp.ViewModels
             if (SelectedGame != null && !string.IsNullOrEmpty(SelectedGame.FilePath))
             {
                 // 检查游戏进程是否已存在
-                var gameProcess = _processPool.RentProcess(SelectedGame.FilePath);
-
-                // 如果进程已经存在且没有退出，尝试将其窗口带到前台
-                if (gameProcess != null && gameProcess.Process != null && !gameProcess.Process.HasExited)
-                {
-                    MessageBox.Show("游戏已在之前启动。", "信息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    // 将游戏窗口带到前台的代码应该在这里实现
-                    // 例如：WinApi.BringProcessToFront(gameProcess.Process.Id);
-                    return;
-                }
-
-                // 尝试启动游戏
-                try
-                {
-                    // 创建并启动游戏进程
-                    var process = new Process
-                    {
-                        StartInfo = new ProcessStartInfo(SelectedGame.FilePath) { UseShellExecute = true },
-                        EnableRaisingEvents = true // 允许使用Exited事件
-                    };
-
-                    process.Start();
-                    // 记录启动的游戏进程
-                    //_processPool.AddProcess(SelectedGame.FilePath, process);
-
-                    process.Exited += (sender, args) =>
-                    {
-                        // 当游戏退出时，执行归还和清理操作
-                        _processPool.ReturnProcess(SelectedGame.FilePath);
-                        process.Dispose();
-                    };
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"无法启动游戏: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                var gameProcess = await _processPool.RentProcessAsync(SelectedGame.FilePath);
             }
         }
+
 
 
 
