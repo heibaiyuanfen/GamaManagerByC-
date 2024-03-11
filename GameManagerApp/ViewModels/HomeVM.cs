@@ -4,14 +4,10 @@ using Microsoft.Win32; // 用于访问OpenFileDialog，打开文件对话框
 using System.Collections.ObjectModel; // 支持数据绑定的集合类型
 using System.IO; // 提供对文件系统的操作
 using System.Windows.Input; // ICommand接口所在命名空间
-using System.Diagnostics; // 提供访问系统进程的类
 using System.Drawing; // 处理图像和图标
 using System.Windows; // WPF的基本类，例如MessageBox
 using GameManagerApp.Models;
-using Microsoft.EntityFrameworkCore;
 using GameManagerApp.Repository;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using GameManagerApp.IRepository;
 using GameManagerApp.Pool;
 
@@ -58,8 +54,6 @@ namespace GameManagerApp.ViewModels
         public ICommand GameInfoCommand { get; private set; }
 
        
-
-        private void GameInfo(object obj) => CurrentView = new GameInfoVM();
 
 
         // 构造函数中初始化命令
@@ -124,12 +118,7 @@ namespace GameManagerApp.ViewModels
         {
             // 这里实现你想要执行的逻辑，比如显示游戏详情
             // 示例：MessageBox.Show($"展示游戏信息：{game.Name}");
-           
-
             GameInfo gameInfo = await _gameInfoRepository.GetGameInfoAsync(game.FilePath);
-
-
-
             CurrentView = new GameInfoVM(gameInfo);
         }
 

@@ -41,9 +41,9 @@ namespace GameManagerApp.Pool
 
                     // 监听进程退出事件
                     matchingProcess.EnableRaisingEvents = true; // 启用退出事件
-                    matchingProcess.Exited += (sender, e) =>
+                    matchingProcess.Exited += async (sender, e) =>
                     {
-                        this.ReturnProcessAsync(gameInfo.FilePath); // 当进程结束时，“归还”
+                        await this.ReturnProcessAsync(gameInfo.FilePath); // 当进程结束时，“归还”
                     };
 
                     // 注意：这里可能需要考虑线程安全问题，因为 _pool 是共享资源

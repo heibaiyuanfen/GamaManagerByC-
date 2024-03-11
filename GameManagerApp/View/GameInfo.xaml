@@ -8,9 +8,7 @@
              d:DesignHeight="600" d:DesignWidth="622"
              Style="{StaticResource Page_Style}">
 
-    <UserControl.DataContext>
-        <vm:GameInfoVM/>
-    </UserControl.DataContext>
+
 
     <Grid>
         <Border CornerRadius="0,20,20,0">
@@ -36,10 +34,10 @@
                 </DockPanel>
                 <!-- Content -->
                 <Grid Margin="0,60,0,0">
-                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="37,171,0,0">
+                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="49,0,0,0">
                         <!-- Replace the below TextBlock with your actual content displaying logic -->
-                        <TextBlock Text="{Binding RunningTime}" Foreground="White" FontSize="14" Margin="60,60,60,10"/>
-                        <TextBlock Text="{Binding RunningTime}" Foreground="Black" FontSize="16" Height="68" Width="220"/>
+                        <TextBlock Text="RunningTime" Foreground="White" FontSize="14" Margin="60,60,60,10"/>
+                        <TextBlock Text="{Binding RunningTime}" Foreground="Black" FontSize="16" Height="59" Width="124"/>
                     </StackPanel>
                 </Grid>
 

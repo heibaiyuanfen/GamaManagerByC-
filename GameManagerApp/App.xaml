@@ -2,8 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:GameManagerApp"
+             xmlns:vm="clr-namespace:GameManagerApp.ViewModels"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/Page.xaml"/>
@@ -11,7 +13,12 @@
                 <ResourceDictionary Source="Styles/Button.xaml"/>
                 <ResourceDictionary Source="Styles/Text.xaml"/>
                 <ResourceDictionary Source="Utilites/DataTemplate.xaml"/>
+                <!-- 其他资源字典 -->
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- 在这里声明HomeVM实例 -->
+            <vm:HomeVM x:Key="HomeVMInstance"/>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
