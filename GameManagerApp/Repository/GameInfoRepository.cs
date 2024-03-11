@@ -5,6 +5,7 @@ using GameManagerApp.IRepository;
 using System.Net;
 using GameManagerApp.Models;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GameManagerApp.Repository
 {
@@ -246,13 +247,59 @@ namespace GameManagerApp.Repository
                         Id = reader["Id"].ToString(),
                         Name = reader["Name"].ToString(),
                         FilePath = reader["FilePath"].ToString(),
-                        runningtime = reader.IsDBNull(reader.GetOrdinal("runningtime")) ? null : reader["runningtime"].ToString()
+                        runningtime = reader.IsDBNull(reader.GetOrdinal("runningtime")) ? null : reader["runningtime"].ToString(),
+                        StartTime = reader["StartTime"].ToString(),
+                        EndTime = reader["EndTime"].ToString()
                         // 根据实际情况添加其他字段
                     };
                 }
             }
             return null; // 如果没有找到对应ID的游戏信息
         }
+
+        public async Task UpdateStartTime(string gameFilePath,string starttime)
+        {
+
+           
+
+            using var connection = GetSqlConnection();
+            // 创建命令并指定参数
+            var command = new SqlCommand("UPDATE Games SET StartTime = @StartTime WHERE FilePath = @FilePath", connection);
+            command.Parameters.AddWithValue("@StartTime", starttime);
+            command.Parameters.AddWithValue("@FilePath", gameFilePath);
+
+            // 打开连接
+            await connection.OpenAsync();
+
+            // 执行命令
+            await command.ExecuteNonQueryAsync();
+
+            // 关闭连接（using 块会自动处理）
+        }
+
+        public async Task UpdateEndTime(string gameFilePath,string EndTime)
+        {
+            
+
+            using (var connection = GetSqlConnection())
+            {
+                // 创建命令并指定参数
+                var command = new SqlCommand("UPDATE Games SET EndTime = @EndTime WHERE FilePath = @FilePath", connection);
+                command.Parameters.AddWithValue("@EndTime", EndTime);
+                command.Parameters.AddWithValue("@FilePath", gameFilePath);
+
+                // 打开连接
+                await connection.OpenAsync();
+
+                // 执行命令
+                await command.ExecuteNonQueryAsync();
+
+                // 关闭连接（using 块会自动处理）
+            }
+        }
+
+
+
 
 
         // ... Other methods from IGameInfoRepository

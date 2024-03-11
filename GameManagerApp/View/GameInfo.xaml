@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:GameManagerApp.ViewModels"
+             xmlns:local="clr-namespace:GameManagerApp.Convert"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="622"
              Style="{StaticResource Page_Style}">
 
 
+
+    <UserControl.Resources>
+        <local:RunningTimeConverter x:Key="RunningTimeConverter"/>
+    </UserControl.Resources>
 
     <Grid>
         <Border CornerRadius="0,20,20,0">
@@ -38,6 +43,22 @@
                         <!-- Replace the below TextBlock with your actual content displaying logic -->
                         <TextBlock Text="RunningTime" Foreground="White" FontSize="14" Margin="60,60,60,10"/>
                         <TextBlock Text="{Binding RunningTime}" Foreground="Black" FontSize="16" Height="59" Width="124"/>
+                    </StackPanel>
+
+
+
+                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="212,147,0,0" Width="340">
+                        <!-- Replace the below TextBlock with your actual content displaying logic -->
+                        <TextBlock Text="运行时段" Foreground="White" FontSize="14" Margin="60,60,60,10"/>
+                        <TextBlock Text="Running Time:" Foreground="White" FontSize="14" Margin="60,60,60,10"/>
+                        <TextBlock Foreground="Black" FontSize="16" Height="52" Width="198">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource RunningTimeConverter}">
+                                    <Binding Path="StartTime" />
+                                    <Binding Path="EndTime" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </Grid>
 

@@ -17,5 +17,9 @@ namespace GameManagerApp.Models
         public byte[] Icon { get; set; }
 
         public string runningtime { get; set; }
+
+        public string StartTime { get; set; }
+
+        public string EndTime { get; set; }
     }
 }

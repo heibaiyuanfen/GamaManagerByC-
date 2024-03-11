@@ -25,7 +25,7 @@ namespace GameManagerApp.Pool
             var gameInfos = await _gameInfoRepository.GetAllAsync(); // 获取所有游戏信息
 
             // 使用 Parallel.ForEach 并行处理每个游戏信息的匹配操作
-            Parallel.ForEach(gameInfos, (gameInfo) =>
+            Parallel.ForEach(gameInfos, async (gameInfo) =>
             {
                 var matchingProcess = allProcesses.FirstOrDefault(
                     p => GetProcessExecutablePath(p)?.Equals(gameInfo.FilePath, StringComparison.OrdinalIgnoreCase) == true
@@ -38,12 +38,14 @@ namespace GameManagerApp.Pool
                         Process = matchingProcess,
                         StartTime = matchingProcess.StartTime // 尽可能使用进程的实际启动时间
                     };
+                    
 
                     // 监听进程退出事件
                     matchingProcess.EnableRaisingEvents = true; // 启用退出事件
                     matchingProcess.Exited += async (sender, e) =>
                     {
                         await this.ReturnProcessAsync(gameInfo.FilePath); // 当进程结束时，“归还”
+                        
                     };
 
                     // 注意：这里可能需要考虑线程安全问题，因为 _pool 是共享资源
@@ -99,6 +101,9 @@ namespace GameManagerApp.Pool
                 Process = process,
                 StartTime = DateTime.Now // 记录当前时间作为开始时间
             };
+            string starttime = gameProcess.StartTime.ToString();
+
+            
 
             _pool[gameFilePath] = gameProcess;
 
@@ -118,7 +123,12 @@ namespace GameManagerApp.Pool
         {
             if (_pool.TryGetValue(gameFilePath, out var gameProcess))
             {
+
+                await _gameInfoRepository.UpdateStartTime(gameFilePath,gameProcess.StartTime.ToString());
+
                 gameProcess.EndTime = DateTime.Now; // 记录当前时间作为结束时间
+                string endtime = gameProcess.EndTime.ToString();
+                await _gameInfoRepository.UpdateEndTime(gameFilePath, endtime);
                 MessageBox.Show(gameProcess.EndTime.ToString());
                 // 计算运行时间
                 var runningTime = gameProcess.EndTime.Value - gameProcess.StartTime;

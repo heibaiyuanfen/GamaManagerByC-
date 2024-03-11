@@ -24,5 +24,9 @@ namespace GameManagerApp.IRepository
 
         Task<GameInfo> GetByFilePathAsync(string filePath);
         Task<GameInfo> GetGameInfoAsync(string gameId);
+
+        Task UpdateStartTime(string gameFilePath,string starttime);
+
+        Task UpdateEndTime(string gameFilePath,string EndTime);
     }
 }

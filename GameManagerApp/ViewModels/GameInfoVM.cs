@@ -10,6 +10,29 @@ namespace GameManagerApp.ViewModels
                                                // 这个字段用于在Customers视图模型中持有一个模型实例。
         private string _runningTime;
 
+        private string _StartTime;
+
+        private string _EndTime;
+
+        public string StartTime
+        {
+            get => _StartTime;
+            set
+            {
+                _StartTime = value; OnPropertyChanged(nameof(StartTime));
+            }
+        }
+
+
+        public string EndTime
+        {
+            get => _EndTime;
+            set { 
+                    _EndTime= value; OnPropertyChanged(nameof(EndTime));        
+                }
+        }
+
+
         public string RunningTime
         {
             get => _runningTime;
@@ -34,6 +57,8 @@ namespace GameManagerApp.ViewModels
         {
             _PageModel = new PageModel();
             RunningTime = game.runningtime;
+            StartTime = game.StartTime; 
+            EndTime = game.EndTime;
         }
 
 
